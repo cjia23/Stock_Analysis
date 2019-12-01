@@ -32,7 +32,8 @@ def drawGraph(list_x, list_y, label_x, label_y):
     plt.plot(list_x, list_y)
     plt.xlabel(label_x)
     plt.ylabel(label_y)
-    plt.show()
+    plt.savefig(join(dir_stock_data, 'AAPL.jpg'))
+    
 
 def run():
 
@@ -47,6 +48,7 @@ def run():
     #apple = getStockData(names, start_date, end_date)
 
     apple = pd.read_csv(join(dir_stock_data, 'AAPL.csv'))
+
     drawGraph(apple['Date'], apple['WIKI/AAPL - Close'], 'Date', 'Apple stock price')
 
     apple.to_csv(join(upper_level_path, 'Stock_Data', f'{names[0][5:]}.csv'))
