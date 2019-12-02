@@ -14,7 +14,8 @@ quandl.ApiConfig.api_key = (open(join(upper_level_path, 'Stock_Data', 'quandl_ke
 
 #download the stock data
 def getStockData(ticker_names, start_date, end_date):
-
+    #check if I already have the data or not
+    
     data = quandl.get(ticker_names, start_date = start_date, end_date = end_date)
     """
     data = quandl.get_table('WIKI/PRICES', ticker = ticker_names, 
@@ -38,16 +39,16 @@ def drawGraph(list_x, list_y, label_x, label_y):
 def run():
 
     end_date = datetime.datetime.today().date()
-    start_date = end_date - datetime.timedelta(1000)
+    start_date = end_date - datetime.timedelta(5000)
 
     print(f"The start date is {start_date}")
     print(f"The end date is {end_date}")
 
-    names = ['WIKI/AAPL']
+    names = ['TSXV/HSE']
     
-    #apple = getStockData(names, start_date, end_date)
+    apple = getStockData(names, start_date, end_date)
 
-    apple = pd.read_csv(join(dir_stock_data, 'AAPL.csv'))
+    #apple = pd.read_csv(join(dir_stock_data, 'AAPL.csv'))
 
     drawGraph(apple['Date'], apple['WIKI/AAPL - Close'], 'Date', 'Apple stock price')
 
