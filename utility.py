@@ -20,13 +20,22 @@ quandl.ApiConfig.api_key = (open(join(path_stock_data, 'quandl_key'), 'r')).read
 #load the data either from csv files at my local folder or download it
 def getStockData(source, ticker_name, start_date, end_date):
     #check if I already have the data or not
-    file_path = join(path_stock_data, ticker_name+'.sql')
-    if os.path.exists(file_path):
+    data = pd.DataFrame()
+    file_path = join(path_stock_data, ticker_name+'.csv')
+    if os.path.isfile(file_path):
         data = pd.read_csv(file_path)
+        existing_start_date = data['Date'].iloc[0]
+        existing_end_date = data['Date'].iloc[-1]
+        print(f'We already have the data for this stock {ticker_name} from date {existing_start_date} to date {existing_end_date}')
         
-
-
-    data = quandl.get(join(source,ticker_name), start_date = start_date, end_date = end_date)
+        print('Downloading......')
+        data.append(quandl.get(join(source,ticker_name), start_date = start_date, end_date = end_date))
+        data.drop_duplicates(['Date'],inplace=True)
+        data.sort_values(by = ['Date'], inplace=True)
+    else:
+        data = quandl.get(join(source,ticker_name), start_date = start_date, end_date = end_date)
+        data.to_csv(join(path_parent, 'Stock_Data', f'{ticker_name}.csv'))
+    
     return data
     
 
@@ -38,25 +47,44 @@ def drawGraph(list_x, list_y, label_x, label_y):
     plt.xlabel(label_x)
     plt.ylabel(label_y)
     plt.savefig(join(path_stock_data, 'AAPL.jpg'))
-    
+
+def analyzeStock():
+    pass
 
 def run():
-
-    end_date = datetime.datetime.today().date()
-    start_date = end_date - datetime.timedelta(5000)
-
-    print(f"The start date is {start_date}")
-    print(f"The end date is {end_date}")
-
-    names = ['TSXV/HSE']
-    
-    apple = getStockData(names, start_date, end_date)
+    user_condition = True
+    user_interface = {}
+    while(user_condition):
+        print("What operation do you want to perform: ")
+        print("a: Download Stock Data")
+        print("b: Visualize Stock Data")
+        print("c: Analyze Stock Data")
+        print("e: Exit this user interface")
+        user_input = input()
+        if user_input == 'a':
+            end_date = datetime.datetime.today().date()
+            start_date = end_date - datetime.timedelta(5000)
+            print(f"The start date is {start_date}")
+            print(f"The end date is {end_date}")
+            source = 'WIKI'
+            ticker_name = 'AAPL'
+            apple = getStockData(source, ticker_name, start_date, end_date)
+            print(apple.head())
+            print(apple.columns)
+        elif user_input == 'b':
+            drawGraph()
+        elif user_input == 'c':
+            analyzeStock()
+        elif user_input == 'e':
+            user_condition = False
+            print('exiting')
+        else:
+            print(f'You have entered invalid input, {user_input}')
+            user_condition = True
 
     #apple = pd.read_csv(join(dir_stock_data, 'AAPL.csv'))
-
-    drawGraph(apple['Date'], apple['WIKI/AAPL - Close'], 'Date', 'Apple stock price')
-
-    apple.to_csv(join(upper_level_path, 'Stock_Data', f'{names[0][5:]}.csv'))
+    #drawGraph(apple['Date'], apple['WIKI/AAPL - Close'], 'Date', 'Apple stock price')
+    
 
 if __name__ == "__main__":
     run()
