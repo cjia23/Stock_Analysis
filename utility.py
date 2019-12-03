@@ -1,28 +1,32 @@
 import pandas as pd
-from pandas_datareader import data
 import os 
 from os.path import join
 import datetime
 import quandl
 import matplotlib.pyplot as plt
 
-cwd = os.getcwd()
-upper_level_path = os.path.dirname(cwd)
-dir_stock_data = join(upper_level_path,'Stock_Data')
 
-quandl.ApiConfig.api_key = (open(join(upper_level_path, 'Stock_Data', 'quandl_key'), 'r')).readline()
+"""
+1. path is the current directory Github/Stock_Analysis
+2. parent path is the parent directory Github
+3. path_stock_data is where I store the stock data locally
+"""
+path = os.getcwd()
+path_parent = os.path.dirname(path)
+path_stock_data = join(path_parent,'Stock_Data')
 
-#download the stock data
-def getStockData(ticker_names, start_date, end_date):
+quandl.ApiConfig.api_key = (open(join(path_stock_data, 'quandl_key'), 'r')).readline()
+
+#load the data either from csv files at my local folder or download it
+def getStockData(source, ticker_name, start_date, end_date):
     #check if I already have the data or not
-    
-    data = quandl.get(ticker_names, start_date = start_date, end_date = end_date)
-    """
-    data = quandl.get_table('WIKI/PRICES', ticker = ticker_names, 
-                        qopts = { 'columns': ['ticker', 'date', 'close','dividend','split'] }, 
-                        date = { 'gte': start_date, 'lte': end_date }, 
-                        paginate=True)
-    """
+    file_path = join(path_stock_data, ticker_name+'.sql')
+    if os.path.exists(file_path):
+        data = pd.read_csv(file_path)
+        
+
+
+    data = quandl.get(join(source,ticker_name), start_date = start_date, end_date = end_date)
     return data
     
 
@@ -33,7 +37,7 @@ def drawGraph(list_x, list_y, label_x, label_y):
     plt.plot(list_x, list_y)
     plt.xlabel(label_x)
     plt.ylabel(label_y)
-    plt.savefig(join(dir_stock_data, 'AAPL.jpg'))
+    plt.savefig(join(path_stock_data, 'AAPL.jpg'))
     
 
 def run():
