@@ -1,6 +1,6 @@
 import pandas as pd
 import os 
-from os.path import join
+from os.path import join, isdir, isfile
 import datetime
 import quandl
 import matplotlib.pyplot as plt
