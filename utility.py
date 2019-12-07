@@ -27,7 +27,6 @@ def getStockData(source, ticker_name, start_date, end_date):
         existing_start_date = data['Date'].iloc[0]
         existing_end_date = data['Date'].iloc[-1]
         print(f'We already have the data for this stock {ticker_name} from date {existing_start_date} to date {existing_end_date}')
-        
         print('Downloading......')
         data.append(quandl.get(join(source,ticker_name), start_date = start_date, end_date = end_date))
         data.drop_duplicates(['Date'],inplace=True)

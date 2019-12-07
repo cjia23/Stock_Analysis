@@ -1,4 +1,4 @@
-1. Something fun, nothing serious
+# Something fun, nothing serious
 
 I always had the idea of implementing python in stock analysis giving the power of computer science and the simple goal of stocks. The goal is just to make money. nothing sepcial.
 Python pandas has a lot of interface to download stock data. 
