@@ -1,4 +1,4 @@
-from utility import getStockData, drawGraph, analyzeStock,connect,create_tables
+from utility import getStockData, drawGraph, analyzeStock,connect,create_tables,sendtoGit
 import datetime
 import os
 from os.path import isdir, isfile, join
@@ -19,6 +19,7 @@ def run():
         print("c: Analyze Stock Data")
         print("d: Connect to database and create table")
         print("e: Exit this user interface")
+        print("f: to git into the repository")
         user_input = input()
         if user_input == 'a':
             end_date = datetime.datetime.today().date()
@@ -37,6 +38,11 @@ def run():
         elif user_input == 'e':
             user_condition = False
             print('exiting')
+        elif user_input == 'f':
+            print("What message you want to put")
+            message = input()
+            message = message.replace(' ', '_')
+            sendtoGit(message)
         else:
             print(f'You have entered invalid input, {user_input}')
             user_condition = True

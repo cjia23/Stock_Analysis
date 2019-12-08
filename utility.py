@@ -5,6 +5,7 @@ import datetime
 import quandl
 import matplotlib.pyplot as plt
 import psycopg2
+import subprocess
 
 #W!1uhNIqRwwG
 """
@@ -151,4 +152,6 @@ def create_tables(source, ticker_name):
         if conn is not None:
             conn.close()  
         
-                   
+def sendtoGit(message):
+    subprocess.call(['./send_to_Git.sh', message])
+                      
