@@ -4,8 +4,9 @@ from os.path import join, isdir, isfile
 import datetime
 import quandl
 import matplotlib.pyplot as plt
+import psycopg2 as database
 
-
+#W!1uhNIqRwwG
 """
 1. path is the current directory Github/Stock_Analysis
 2. parent path is the parent directory Github
@@ -48,3 +49,9 @@ def drawGraph(list_x, list_y, label_x, label_y):
 
 def analyzeStock():
     pass
+
+
+def postgres_connect():
+    database.connect(database='Stock_Analysis',
+                     user='chunyangjia',
+                     password='Duanxiaohong1966')

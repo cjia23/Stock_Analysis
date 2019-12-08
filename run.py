@@ -1,5 +1,11 @@
-from Stock_Analysis.utility import getStockData, drawGraph, analyzeStock
-from datetime import datetime
+from utility import getStockData, drawGraph, analyzeStock
+import datetime
+import os
+from os.path import isdir, isfile, join
+
+
+path = os.getcwd()
+os.chdir(join(path))
 
 def run():
     user_condition = True
@@ -20,7 +26,6 @@ def run():
             ticker_name = 'AAPL'
             apple = getStockData(source, ticker_name, start_date, end_date)
             print(apple.head())
-            print(apple.columns)
         elif user_input == 'b':
             drawGraph()
         elif user_input == 'c':
