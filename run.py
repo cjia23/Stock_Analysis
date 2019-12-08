@@ -1,4 +1,4 @@
-from utility import getStockData, drawGraph, analyzeStock
+from utility import getStockData, drawGraph, analyzeStock,connect
 import datetime
 import os
 from os.path import isdir, isfile, join
@@ -15,6 +15,7 @@ def run():
         print("a: Download Stock Data")
         print("b: Visualize Stock Data")
         print("c: Analyze Stock Data")
+        print("d: Connect to database")
         print("e: Exit this user interface")
         user_input = input()
         if user_input == 'a':
@@ -30,6 +31,8 @@ def run():
             drawGraph()
         elif user_input == 'c':
             analyzeStock()
+        elif user_input == 'd':
+            connect()
         elif user_input == 'e':
             user_condition = False
             print('exiting')
