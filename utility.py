@@ -45,7 +45,7 @@ def drawGraph(list_x, list_y, label_x, label_y):
     plt.plot(list_x, list_y)
     plt.xlabel(label_x)
     plt.ylabel(label_y)
-    plt.savefig(join(path_stock_data, 'AAPL.jpg'))
+    plt.savefig(join(path_stock_data, '{ticker_name}.jpg'))
 
 def analyzeStock():
     pass
@@ -99,7 +99,56 @@ def connect():
             conn.close()
             print('Database connection closed.')
  
-def createtable():
-    pass        
+def create_tables(source, ticker_name):
+    """ create tables in the PostgreSQL database"""
+    columns = ['Date',
+               f'{source}{ticker_name}_Open',
+               f'{source}{ticker_name}_High',
+               f'{source}{ticker_name}_Low',
+               f'{source}{ticker_name}_Close',
+               f'{source}{ticker_name}_Volume',
+               f'{source}{ticker_name}_Ex_Dividend',
+               f'{source}{ticker_name}_Split_Ratio',
+               f'{source}{ticker_name}_Adj_Open',
+               f'{source}{ticker_name}_Adj_High',
+               f'{source}{ticker_name}_Adj_Low',
+               f'{source}{ticker_name}_Adj_Close',
+               f'{source}{ticker_name}_Adj_Volume']
+    commands = (
+        f"""
+        CREATE TABLE {ticker_name} (
+            {columns[0]} date PRIMARY KEY,
+            {columns[1]} float(8) ,
+            {columns[2]} float(8),
+            {columns[3]} float(8),
+            {columns[4]} float(8),
+            {columns[5]} float(8),
+            {columns[6]} float(8),
+            {columns[7]} float(8),
+            {columns[8]} float(8),
+            {columns[9]} float(8),
+            {columns[10]} float(8),
+            {columns[11]} float(8),
+            {columns[12]} float(8)
+        )
+        """)
+    conn = None
+    try:
+        # read the connection parameters
+        params = config()
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        # create table one by one
+        cur.execute(commands)
+        # close communication with the PostgreSQL database server
+        cur.close()
+        # commit the changes
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()  
         
-                    
+                   

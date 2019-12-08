@@ -1,4 +1,4 @@
-from utility import getStockData, drawGraph, analyzeStock,connect
+from utility import getStockData, drawGraph, analyzeStock,connect,create_tables
 import datetime
 import os
 from os.path import isdir, isfile, join
@@ -10,12 +10,14 @@ os.chdir(join(path))
 def run():
     user_condition = True
     user_interface = {}
+    source = 'WIKI'
+    ticker_name = 'AAPL'
     while(user_condition):
         print("What operation do you want to perform: ")
         print("a: Download Stock Data")
         print("b: Visualize Stock Data")
         print("c: Analyze Stock Data")
-        print("d: Connect to database")
+        print("d: Connect to database and create table")
         print("e: Exit this user interface")
         user_input = input()
         if user_input == 'a':
@@ -23,8 +25,6 @@ def run():
             start_date = end_date - datetime.timedelta(5000)
             print(f"The start date is {start_date}")
             print(f"The end date is {end_date}")
-            source = 'WIKI'
-            ticker_name = 'AAPL'
             apple = getStockData(source, ticker_name, start_date, end_date)
             print(apple.head())
         elif user_input == 'b':
@@ -33,6 +33,7 @@ def run():
             analyzeStock()
         elif user_input == 'd':
             connect()
+            create_tables(source=source, ticker_name= ticker_name)
         elif user_input == 'e':
             user_condition = False
             print('exiting')
