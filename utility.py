@@ -24,7 +24,7 @@ def getStockData(source, ticker_name, start_date, end_date):
     #check if I already have the data or not
     data = pd.DataFrame()
     file_path = join(path_stock_data, ticker_name+'.csv')
-    if os.path.isfile(file_path):
+    if isfile(file_path):
         data = pd.read_csv(file_path)
         existing_start_date = data['Date'].iloc[0]
         existing_end_date = data['Date'].iloc[-1]
@@ -33,10 +33,10 @@ def getStockData(source, ticker_name, start_date, end_date):
         data.append(quandl.get(join(source,ticker_name), start_date = start_date, end_date = end_date))
         data.drop_duplicates(['Date'],inplace=True)
         data.sort_values(by = ['Date'], inplace=True)
+        data.drop([0,1,2], inplace=True)
     else:
         data = quandl.get(join(source,ticker_name), start_date = start_date, end_date = end_date)
         data.to_csv(join(path_parent, 'Stock_Data', f'{ticker_name}.csv'))
-    
     return data
     
 def writeToFile():
@@ -99,7 +99,7 @@ def connect():
         if conn is not None:
             conn.close()
             print('Database connection closed.')
- 
+
 def create_tables(source, ticker_name):
     """ create tables in the PostgreSQL database"""
     columns = ['Date',
@@ -151,7 +151,31 @@ def create_tables(source, ticker_name):
     finally:
         if conn is not None:
             conn.close()  
-        
+
+def insert_vendor_list(vendor_list):
+    """ insert multiple vendors into the vendors table  """
+    sql = "INSERT INTO vendors(vendor_name) VALUES(%s)"
+    conn = None
+    try:
+        # read database configuration
+        params = config()
+        # connect to the PostgreSQL database
+        conn = psycopg2.connect(**params)
+        # create a new cursor
+        cur = conn.cursor()
+        # execute the INSERT statement
+        cur.executemany(sql,vendor_list)
+        # commit the changes to the database
+        conn.commit()
+        # close communication with the database
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
 def sendtoGit(message):
     subprocess.call(['./send_to_Git.sh', message])
-                      
+
+

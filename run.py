@@ -18,6 +18,7 @@ def run():
         print("b: Visualize Stock Data")
         print("c: Analyze Stock Data")
         print("d: Connect to database and create table")
+        print("")
         print("e: Exit this user interface")
         print("f: to git into the repository")
         user_input = input()
